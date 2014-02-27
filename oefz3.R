@@ -46,3 +46,35 @@ Sigma = diag(4)
 #}
 #
 #newplotwindow()
+
+# 3.a) Lees de ces.csv dataset in.
+# 3.b) Plaats in matrix FDHOFDAW de waarden van de variabelen FDHO en FDAW
+#      voor alle datapunten waarvoor beide observaties strikt groter zijn dan 0.
+# 3.c) Voor elke van de variabelen in FDHOFDAW:
+#         I. Onderzoek de normaliteit van de oorspronkelijke variabelen.
+#        II. Bepaal de optimaal Box-Cox transformatie.
+#       III. Onderzoek de normaliteit van de getransformeerde variabelen.
+# 3.d) Gezamenlijk voor beide variabelen in FDHOFDAW:
+#         I. Onderzoek de bivariate normaliteit van de oorspronkelijke
+#            variabelen.
+#        II. Bepaal de optimaal *multivariate* Box-Cox transformatie.
+#       III. Onderzoek de bivariate normaliteit van de getransformeerde
+#            variabelen.
+
+
+
+# 4.a) Bepaal
+#         I. De 97.5 percent betrouwbaarheidsellips voor mu_.T
+#            (de gemiddelde volgens de kolommen van de getransformeerde
+#             variabelen).
+#        II. De 97.5 percent univariate betrouwbaarheidsintervallen van
+#            mu_1T en mu_2T
+#       III. De 97.5 percent simultane univariate betrouwbaarheidsintervallen
+#            van mu_1T en mu_2T
+#        IV. De Bonferroni betrouwbaarheidsintervallen met een gezamenlijk
+#            betrouwbaarheid van minstens 97.5 percent.
+# 4.b) Vergelijk de lengte van de Bonferroni intervallen met de lengte van
+#      de simultane intervallen.
+# 4.c) Test (op de 5 percent) of mu_0 = (27.75, 14.55) a.d.h.v. de voorgaande
+#      intervallen. Leveren zij steeds hetzelfde resultaat?
+# 4.d) Maak 1 figuur met de ellips, de intervallen en mu_0.
