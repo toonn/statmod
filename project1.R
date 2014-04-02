@@ -42,8 +42,27 @@
 #       |   6   | Mechelen|
 #       |   7   | Sint-   |
 #       |       |  Niklaas|
-#       |   8   | Turnhout|
+#    ==>|   8   | Turnhout|
 #       +-------+---------+
+
+library(gdata)
+turnhout = read.xls(xls='Turnhout.xlsx', sheet=1, pattern='Mannen')
+rownames(turnhout) = turnhout[,1]
+turnhout = turnhout[,-1]
+colnames(turnhout) = c('Mannen',
+                       'Vrouwen',
+                       'n_geboorten',
+                       'n_overlijdens',
+                       'Immigratie saldo',
+                       '80+/60+ (in%)',
+                       '(0-19)/totaal (in %)',
+                       'Aantal aangiften < 10.000 euro',
+                       'Aantal aangiften > 50.000 euro',
+                       'Gemiddeld inkomen per aangifte',
+                       'werkzaamheidsgraad',
+                       'werkloosheidsgraad',
+                       'Gemiddelde verkoopprijs van woonhuizen')
+print(summary(turnhout))
 
 # Opgave 1: PCA
 #   1. Voer een PCA analyse uit op jullie gegevens. Argumenteer waarom je
@@ -51,7 +70,7 @@
 #      gegevens. Bepaal het aantal componenten dat je verkiest te behouden
 #      en verklaar je keuze.
 
-
+princomp(turnhout)
 
 #   2. Bekijk de loadings van de weerhouden componenten en tracht de PCs
 #      te interpreteren aan de hand van de loadings. Ga na welke originele
