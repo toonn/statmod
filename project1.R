@@ -135,9 +135,6 @@ print(pca_cor_turnhout$rotation[,1:7])
 ### Opnieuw jonge mensen, werkloosheid, werkzaamheid en inkomen.
 ###     Werkloosheidsgraad
 
-
-
-
 #   3. Onderzoek de impact van de centrumstad op het resultaat van de PCA
 #      analyse.
 
