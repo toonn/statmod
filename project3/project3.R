@@ -70,36 +70,25 @@ print(summary(turnhout))
 # 1. Gebruik een regressiemodel om de respons `Stad' te verklaren
 #    aan de hand van de andere beschikbare variabelen.
 
-turnhout.glm = glm(Stad
-                 ~Migratie_saldo
-                 +Grijze_druk
-                 +Groene_druk
-                 +natuurlijke_loop
-                 +`%_aangiften_>_50.000_euro`
-                 +Gemiddeld_inkomen_per_aangifte
-                 +werkzaamheidsgraad
-                 +werkloosheidsgraad
-                 +Gemiddelde_verkoopprijs_van_woonhuizen
-                 +`%_leefloners`
-                 +`%_geboorten_in_kansarme_gezinnen`
-                 +`%_bejaarden_met_inkomensgarantie`
-                 +Regio, family=binomial, data=turnhout)
-cat('\n ', 'Summary turnhout.glm:', '\n',
-    '-----------------------', '\n')
-print(summary(turnhout.glm))
+turnhout.glm = glm (Stad ~., family=binomial, data=turnhout)
+turnhout.glms = step(turnhout.glm, ~.)
 
-cat('\n ', 'Anova turnhout.glm:', '\n',
+cat('\n ', 'Summary turnhout.glms:', '\n',
+    '-----------------------', '\n')
+print(summary(turnhout.glms))
+
+cat('\n ', 'Anova turnhout.glms:', '\n',
     '---------------------', '\n')
-print(anova(turnhout.glm, test="Chisq"))
+print(anova(turnhout.glms, test="Chisq"))
 
 
 # 2. Geeft dit regressiemodel een aanvaardbare fit?
 
 cat('\n ', 'Acceptable fit', '\n',
     '----------------', '\n')
-cat('  ', 'Chi^2_167,0.05: ', qchisq(0.05, 167), '\n') # = 138.1184
+cat('  ', 'Chi^2_175,0.05: ', qchisq(0.05, 175), '\n') # = 145.4058
 
-# Ja, chi^2_167,0.05 = 138.1184, de model deviance is 114.85 dus
+# Ja, chi^2_175,0.05 = 145.4058, de model deviance is 118.57 dus
 # we aanvaarden het model.
 
 # 3. Is de variabele `Regio' nuttig in het regressiemodel of kan
@@ -121,7 +110,7 @@ cat('  ', 'Chi^2_1,0.95: ', qchisq(0.95, 1), '\n')
 #    opgelost worden om een beter model te bekomen?
 
 ##pdf('deviance_residuals.pdf')
-#plot(turnhout.noregio, which=1) # residuals plot
+#plot(turnhout.glms, which=1) # residuals plot
 ##dev.off()
 
 # Uit de plot van de deviance residuals is duidelijk dat de enige
@@ -130,15 +119,16 @@ cat('  ', 'Chi^2_1,0.95: ', qchisq(0.95, 1), '\n')
 # 5. Hoe goed kan je met dit model steden van gemeenten
 #    onderscheiden?
 
-logitpred = predict(turnhout.noregio) > 0.5
+logitpred = predict(turnhout.glms) > 0.5
 cat('\n ', 'Classification table:', '\n',
     '-----------------------', '\n')
-print(table(turnhout$Stad, logitpred))
+logt = table(turnhout$Stad, logitpred)
+print(logt)
 cat('  ', 'Prediction error: ',
-    round((22+4)/(137+4+22+17)*100, 2), '%\n')
+    round((logt[1,2]+logt[2,1])/(sum(logt))*100, 2), '%\n')
 
 # Het model heeft een lage (14.4%) prediction error. Van de 180
-# observaties worden 4 gemeenten geclassificeerd als steden en 22
+# observaties worden 3 gemeenten geclassificeerd als steden en 23
 # steden geclassificeerd als gemeentes. Dit in de aanname dat
 # de misclassificatie voor beiden dezelfde kost heeft
 # (threshold 0.5) .
@@ -149,19 +139,10 @@ cat('  ', 'Prediction error: ',
 
 library(MASS)
 turnhout.lda = lda(Stad
-                 ~Migratie_saldo
-                 +Grijze_druk
+                 ~Grijze_druk
                  +Groene_druk
-                 +natuurlijke_loop
-                 +`%_aangiften_>_50.000_euro`
                  +Gemiddeld_inkomen_per_aangifte
-                 +werkzaamheidsgraad
-                 +werkloosheidsgraad
-                 +Gemiddelde_verkoopprijs_van_woonhuizen
-                 +`%_leefloners`
-                 +`%_geboorten_in_kansarme_gezinnen`
-                 +`%_bejaarden_met_inkomensgarantie`
-                 +Regio, data=turnhout)
+                 +`%_leefloners`, data=turnhout)
 
 cat('\n ', 'Summary turnhout.lda:', '\n',
     '-----------------------', '\n')
@@ -170,11 +151,12 @@ print(turnhout.lda)
 ldapred = predict(turnhout.lda, turnhout)$class
 cat('\n ', 'Classification table:', '\n',
     '-----------------------', '\n')
-print(table(turnhout$Stad, ldapred))
+ldat = table(turnhout$Stad, ldapred)
+print(ldat)
 cat('  ', 'Prediction error: ',
-    round((23+5)/(137+4+22+17)*100, 2), '%\n')
+    round((ldat[1,2]+ldat[2,1])/(sum(ldat))*100, 2), '%\n')
 
-# Het levert een vergelijkbaar resultaat op, prediction error 15.6%.
+# Het levert een vergelijkbaar resultaat op, prediction error 15%.
 # Maar de threshold voor classificatie bij de logistische regressie
 # is momenteel niet afgesteld op de data en kan mogelijk nog
 # voor verbetering zorgen.
